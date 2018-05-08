@@ -1,22 +1,17 @@
-from matrix import Matrix
+from layer import Layer
 
 
 class Perceptron:
-    class Layer:
-        def __init__(self, num_inputs, num_outputs, bias, activation_function):
-            self.weights = Matrix(num_outputs, num_inputs)
-            self.weights.init_random()
-            self.bias = Matrix.initialized(num_outputs, 1, bias)
-            self.activation_function = activation_function
+    def __init__(self, ai, ao, ro, f1, f2):
+        self.layer_associative = Layer(ai, ao, f1)
+        self.layer_resultant = Layer(ao, ro, f2, False)
 
-    def __init__(self, **kwargs):
-        self.layer_associative = Layer(kwargs["count_associative_inputs"],
-                                       kwargs["count_associative_outputs"],
-                                       kwargs.get("bias_associative", 0.1),
-                                       lambda x: 0 if x < 0 else (1 if x > 1 else x))
+    def predict(self, vect):
+        res = self.layer_associative.predict(vect)
+        return self.layer_resultant.predict(res)
 
-        self.layer_resultant = Layer(kwargs["count_associative_outputs"],
-                                     kwargs["count_resultant_outputs"],
-                                     kwargs.get("bias_resultant", 0.1),
-                                     lambda x: 0 if x < 0 else 1)
-
+    def train(self, in_vect, out_vect):
+        res = self.predict(in_vect)
+        err = out_vect - res
+        self.layer_resultant.train(err)
+        return self.predict(in_vect)

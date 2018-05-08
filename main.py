@@ -1,15 +1,18 @@
-import perceptron
+from perceptron import Perceptron
+from vector import Vector
 
+ai = 10
+ao = 16
+ro = 5
 
-a = []
+f1 = lambda x: 0 if x < 0 else 1
+f2 = lambda x: -1 if x < 0 else 1
 
-for i in range(100):
-    a.append(i % 2)
+a = Vector([1, 0, 0, 1, 0, 0, 1, 0, 0, 1])
+b = Vector([-1, 1, -1, -1, -1])
 
-p = perceptron.Perceptron(count_associative_inputs=100,
-                          count_associative_outputs=128,
-                          count_resultant_outputs=10,
-                          bias_associative=0.1,
-                          bias_resultant=0.1)
+p = Perceptron(ai, ao, ro, f1, f2)
+for i in range(20):
+    p.train(a, b)
 
 print(p.predict(a))
